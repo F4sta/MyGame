@@ -1,0 +1,2 @@
+# MyGame
+pygame library
