@@ -3,7 +3,7 @@ import random
 import sys
 from time import sleep
 def main():
-    global game
+    global game, settings
     width, height = 1280, 720
 
     pygame.init()
@@ -18,8 +18,9 @@ def main():
     keys = None
     score = 0
     objectives = None
-    game = True
+    game = False
     menu = True
+    settings = False
     #default-options
     Bullet_endsize = 100
     amount_of_bullet = 30
@@ -130,19 +131,20 @@ def main():
         pygame.quit()
         quit()
     """
-    font2 = pygame.font.Font('./fonts/MaldiniBold-OVZO6.ttf', 60)
-    font = pygame.font.Font('./fonts/MaldiniStyle-3zOwp.ttf', 60)
+    font = pygame.font.Font('./fonts/MALDINISTYLE.ttf', 60)
+    small_font = pygame.font.Font('./fonts/MALDINISTYLE.ttf', 44)
     
+    #score
     score_label = font.render(str(score), True, (60, 60, 60))
     score_labelRect = score_label.get_rect()
     score_labelRect.center = (width / 2, height / 20)
     
-    
-    
+    #title
     MainText = font.render('My Awesome Game', True, (60, 60, 60))
     MainText_Rect = MainText.get_rect()
     MainText_Rect.center = (width / 2, height / 5)
     
+    #main menu 
     Playtext = font.render('Play', True, (60, 60, 60))
     Playtext_Rect = Playtext.get_rect()
     Playtext_Rect.center = (width / 2, height / 2 - 40)
@@ -155,9 +157,29 @@ def main():
     Quittext_Rect = Quittext.get_rect()
     Quittext_Rect.center = (width / 2, height / 2 + 120)
     
+    #settings
+    size_text = font.render('Bullet Size', True, (60, 60, 60))
+    size_text_rect = size_text.get_rect()
+    size_text_rect.center = (width / 2, height / 2 - 40)
+    
+    val1 = font.render(('< ' + str(Bullet_endsize) + ' >'), True, (60, 60, 60))
+    val1_rect = val1.get_rect()
+    val1_rect.center = (width / 2, height / 2 + 40)
+    
+    amount = font.render('Bullet Amount', True, (60, 60, 60))
+    amount_rect = amount.get_rect()
+    amount_rect.center = (width / 2, height / 2 + 120)
+    
+    val2 = font.render(('< ' + str(amount_of_bullet) + ' >'), True, (60, 60, 60))
+    val2_rect = val2.get_rect()
+    val2_rect.center = (width / 2, height / 2 + 200)
+    
+    Back = small_font.render('Main Menu', True, (60, 60, 60))
+    Back_rect = Back.get_rect()
+    Back_rect.center = (width / 6, height / 2 + 280)
     
     
-    
+    #endgame
     menutext = font.render('Main Menu', True, (60, 60, 60))
     menutext_Rect = menutext.get_rect()
     menutext_Rect.center = (width / 2, height / 2 + 40)
@@ -184,31 +206,40 @@ def main():
                 print(str(game))
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                
+                width_check = (width/2 - 150) <= mouse[0] <= (width/2 + 150)
                 if menu:
                     #play button event
-                    if (width/2 - 538) <= mouse[0] <= (width/2 + 538) and (height/2 - 70) <= mouse[1] <= (height/2 - 10):
+                    if width_check and (height/2 - 70) <= mouse[1] <= (height/2 - 10):
                         menu = False
                         objectives = False
                         game = True
                     
                     #settings button event
-                    if (width/2 - 538) <= mouse[0] <= (width/2 + 538) and (height/2 + 10) <= mouse[1] <= (height/2 + 70):
-                        pass
+                    if width_check and (height/2 + 10) <= mouse[1] <= (height/2 + 70):
+                        menu = False
+                        settings = True
                     
                     #quit button event
-                    if (width/2 - 54) <= mouse[0] <= (width/2 + 54) and (height/2 + 90) <= mouse[1] <= (height/2 + 140):
+                    if width_check and (height/2 + 90) <= mouse[1] <= (height/2 + 140):
                         pygame.quit()
                         quit()
-                        
-                if game == False:
+                
+                elif settings:
+                    print(mouse)
+                    #Main Menu button event
+                    if (width/6 - 100) <= mouse[0] <= (width/6 + 100) and (height/2 + 260) <= mouse[1] <= (height/2 + 300):
+                        menu = True
+                        settings = False
+                    
+                
+                elif game == False:
                     #play button event
-                    if (width/2 - 538) <= mouse[0] <= (width/2 + 538) and (height/2 - 70) <= mouse[1] <= (height/2 - 10):
+                    if width_check and (height/2 - 70) <= mouse[1] <= (height/2 - 10):
                         objectives = False
                         game = True
                 
                     #main menu button event
-                    if (width/2 - 538) <= mouse[0] <= (width/2 + 538) and (height/2 + 10) <= mouse[1] <= (height/2 + 70):
+                    if width_check and (height/2 + 10) <= mouse[1] <= (height/2 + 70):
                         menu = True
                     
         ''' print(str(mouse)) '''
@@ -219,30 +250,39 @@ def main():
             screen.blit(Settingstext, Settingstext_Rect)
             screen.blit(Quittext, Quittext_Rect)
             
-        #game
-        elif game:        
-            p1.render()
-            p1.movement_check()
-            if objectives == False:
-                objs = []
-                objs = [Bullet() for i in range(amount_of_bullet)]
-                objectives = True
-                sleep(0.1)
-            elif objectives:
-                score_label = font.render(str(int(score)), True, (60, 60, 60))
-                screen.blit(score_label, score_labelRect)
-                score += 1/60
-                for obj in objs:
-                    try:
-                        obj.attack()
-                    except:
-                        pass
-        elif game == False:
+        elif settings == True:
             screen.blit(MainText, MainText_Rect)
-            screen.blit(Playtext, Playtext_Rect)
-            screen.blit(menutext, menutext_Rect)
-            gameend_score = font.render(('Your Score is ' + str(int(score))), True, (60, 60, 60))
-            screen.blit(gameend_score, gameend_score_Rect)
+            screen.blit(size_text,size_text_rect)
+            screen.blit(val1,val1_rect)
+            screen.blit(amount,amount_rect)
+            screen.blit(val2,val2_rect)
+            screen.blit(Back,Back_rect)
+            
+        else:
+        #game
+            if game:        
+                p1.render()
+                p1.movement_check()
+                if objectives == False:
+                    objs = []
+                    objs = [Bullet() for i in range(amount_of_bullet)]
+                    objectives = True
+                    sleep(0.1)
+                elif objectives:
+                    score_label = font.render(str(int(score)), True, (60, 60, 60))
+                    screen.blit(score_label, score_labelRect)
+                    score += 1/60
+                    for obj in objs:
+                        try:
+                            obj.attack()
+                        except:
+                            pass
+            elif game == False:
+                screen.blit(MainText, MainText_Rect)
+                screen.blit(Playtext, Playtext_Rect)
+                screen.blit(menutext, menutext_Rect)
+                gameend_score = font.render(('Your Score is ' + str(int(score))), True, (60, 60, 60))
+                screen.blit(gameend_score, gameend_score_Rect)
 
         pygame.display.update()
 
