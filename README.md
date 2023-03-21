@@ -1,2 +1,3 @@
-# MyGame
-pygame library
+# My Awesome Game
+
+Readme in progress...
