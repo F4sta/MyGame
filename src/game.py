@@ -64,8 +64,8 @@ def main():
     
     #settings
     
-    #Bullet Size
-    size_text = font.render('Bullet Size', True, (60, 60, 60))
+    #Enemy Size
+    size_text = font.render('Enemy Size', True, (60, 60, 60))
     size_text_rect = size_text.get_rect()
     size_text_rect.center = (width / 3, height / 2 - 40)
     val1 = font.render(str(Enemy_size), True, (60, 60, 60))
@@ -75,8 +75,8 @@ def main():
     minusplus1_rect = minusplus1.get_rect()
     minusplus1_rect.center = (width / 3, height / 2 + 40)
     
-    #Bullet Amount
-    amount = font.render('Bullet Amount', True, (60, 60, 60))
+    #Enemy Amount
+    amount = font.render('Enemy Amount', True, (60, 60, 60))
     amount_rect = amount.get_rect()
     amount_rect.center = (width / 2, height / 2 + 120)
     val2 = font.render(str(amount_of_enemy), True, (60, 60, 60))
